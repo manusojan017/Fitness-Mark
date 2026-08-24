@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Fitness 07 Tracker</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #080808;
+  color: white;
+  padding: 18px;
+}
+
+.container {
+  max-width: 560px;
+  margin: auto;
+}
+
+h1 {
+  color: #ff2020;
+  text-align: center;
+  font-size: 34px;
+  margin: 5px 0;
+  font-weight: 900;
+}
+
+.subtitle {
+  text-align: center;
+  color: #aaa;
+  margin-bottom: 22px;
+  font-size: 14px;
+}
+
+.card {
+  background: #151515;
+  border: 1px solid #ff2020;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 0 15px rgba(255,0,0,0.12);
+}
+
+.card h2 {
+  color: #ff2020;
+  margin-top: 0;
+  font-size: 21px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin: 11px 0;
+}
+
+.food-name {
+  font-size: 15px;
+}
+
+input[type="number"],
+input[type="text"] {
+  width: 115px;
+  padding: 9px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #222;
+  color: white;
+  font-size: 15px;
+}
+
+input[type="checkbox"] {
+  transform: scale(1.35);
+  accent-color: #ff2020;
+}
+
+button {
+  width: 100%;
+  background: #ff2020;
+  border: none;
+  color: white;
+  padding: 13px;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+button:hover {
+  opacity: 0.88;
+}
+
+.small-button {
+  width: auto;
+  flex: 1;
+}
+
+.water-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.progress {
+  height: 20px;
+  background: #333;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #ff2020;
+  transition: 0.3s;
+}
+
+.macro-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.macro-box {
+  background: #202020;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+}
+
+.macro-box .value {
+  color: #ff2020;
+  font-size: 23px;
+  font-weight: bold;
+}
+
+.macro-box .label {
+  color: #aaa;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.target {
+  color: #aaa;
+  font-size: 13px;
+  margin-top: 3px;
+}
+
+.remaining {
+  color: #ff2020;
+  font-weight: bold;
+}
+
+.footer {
+  text-align: center;
+  color: #666;
+  margin: 25px 0 10px;
+  font-size: 13px;
+}
+
+.status {
+  background: #0f0f0f;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 12px;
+  text-align: center;
+  color: #aaa;
+}
+
+.success {
+  color: #ff2020;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.danger {
+  color: #ff5555;
+}
+
+.section-note {
+  color: #999;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media(max-width:420px) {
+  body {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 29px;
+  }
+
+  .row {
+    align-items: center;
+  }
+
+  input[type="number"],
+  input[type="text"] {
+    width: 100px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>FITNESS 07 TRACKER</h1>
+
+<div class="subtitle">
+Daily Cutting • Muscle Retention • 5:30 AM Gym
+</div>
+
+
+<!-- DAILY TARGET -->
+
+<div class="card">
+
+<h2>🎯 Daily Targets</h2>
+
+<div class="macro-grid">
+
+<div class="macro-box">
+<div class="value">1900</div>
+<div class="label">Calories</div>
+</div>
+
+<div class="macro-box">
+<div class="value">145g</div>
+<div class="label">Protein</div>
+</div>
+
+<div class="macro-box">
+<div class="value">210g</div>
+<div class="label">Carbs</div>
+</div>
+
+<div class="macro-box">
+<div class="value">55g</div>
+<div class="label">Fat</div>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- FOOD INPUT -->
+
+<div class="card">
+
+<h2>🍽️ Food Calculator</h2>
+
+<p class="section-note">
+Enter the amount you actually ate. Rice and chicken are calculated using cooked weight. Soya is calculated using dry weight.
+</p>
+
+
+<div class="row">
+<span class="food-name">🥚 Eggs (pieces)</span>
+<input type="number" id="eggs" min="0" step="1" value="0">
+</div>
+
+
+<div class="row">
+<span class="food-name">🥛 Milk (ml)</span>
+<input type="number" id="milk" min="0" step="10" value="0">
+</div>
+
+
+<div class="row">
+<span class="food-name">🥣 Oats (g)</span>
+<input type="number" id="oats" min="0" step="1" value="0">
+</div>
+
+
+<div class="row">
+<span class="food-name">🍗 Chicken cooked (g)</span>
+<input type="number" id="chicken" min="0" step="1" value="0">
+</div>
+
+
+<div class="row">
+<span class="food-name">🍚 Rice cooked (g)</span>
+<input type="number" id="rice" min="0" step="1" value="0">
+</div>
+
+
+<div class="row">
+<span class="food-name">🐟 Fish cooked (g)</span>
+<input type="number" id="fish" min="0" step="1" value="0">
+</div>
+
+
+<div class="row">
+<span class="food-name">🌱 Soya dry (g)</span>
+<input type="number" id="soya" min="0" step="1" value="0">
+</div>
+
+
+<div class="row">
+<span class="food-name">🥜 Peanuts (g)</span>
+<input type="number" id="peanuts" min="0" step="1" value="0">
+</div>
+
+
+<div class="row">
+<span class="food-name">🥤 MuscleBlaze Whey (scoops)</span>
+<input type="number" id="whey" min="0" step="0.25" value="0">
+</div>
+
+
+<div class="row">
+<span class="food-name">🍌 Banana (medium)</span>
+<input type="number" id="banana" min="0" step="1" value="0">
+</div>
+
+
+<div class="row">
+<span class="food-name">🧡 Papaya (g)</span>
+<input type="number" id="papaya" min="0" step="1" value="0">
+</div>
+
+
+<div class="row">
+<span class="food-name">🥕 Carrot (g)</span>
+<input type="number" id="carrot" min="0" step="1" value="0">
+</div>
+
+
+<div class="row">
+<span class="food-name">🫘 Beans (g)</span>
+<input type="number" id="beans" min="0" step="1" value="0">
+</div>
+
+
+<div class="row">
+<span class="food-name">🥛 Curd (g)</span>
+<input type="number" id="curd" min="0" step="1" value="0">
+</div>
+
+
+<button onclick="calculateMacros()">
+CALCULATE MACROS
+</button>
+
+</div>
+
+
+<!-- MACRO RESULT -->
+
+<div class="card">
+
+<h2>📊 Today's Nutrition</h2>
+
+<div class="macro-grid">
+
+<div class="macro-box">
+<div class="value" id="calorieResult">0</div>
+<div class="label">Calories</div>
+</div>
+
+<div class="macro-box">
+<div class="value" id="proteinResult">0g</div>
+<div class="label">Protein</div>
+</div>
+
+<div class="macro-box">
+<div class="value" id="carbResult">0g</div>
+<div class="label">Carbs</div>
+</div>
+
+<div class="macro-box">
+<div class="value" id="fatResult">0g</div>
+<div class="label">Fat</div>
+</div>
+
+</div>
+
+
+<div class="status">
+
+Protein remaining:
+<span class="remaining" id="proteinRemaining">145 g</span>
+
+<br><br>
+
+Calories remaining:
+<span class="remaining" id="calorieRemaining">1900 kcal</span>
+
+</div>
+
+</div>
+
+
+<!-- WATER -->
+
+<div class="card">
+
+<h2>💧 Water Tracker</h2>
+
+<p>
+<strong id="waterText">0</strong> / 3700 ml
+</p>
+
+<div class="progress">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+
+<div class="water-buttons">
+
+<button class="small-button" onclick="addWater(250)">
++250 ml
+</button>
+
+<button class="small-button" onclick="addWater(500)">
++500 ml
+</button>
+
+<button class="small-button" onclick="addWater(1000)">
++1 L
+</button>
+
+</div>
+
+<button onclick="resetWater()">
+RESET WATER
+</button>
+
+</div>
+
+
+<!-- DAILY CHECKLIST -->
+
+<div class="card">
+
+<h2>☑️ Daily Checklist</h2>
+
+
+<div class="row">
+<span>🏋️ Workout Completed</span>
+<input type="checkbox" class="dailyCheck">
+</div>
+
+
+<div class="row">
+<span>🥩 Protein Target Hit</span>
+<input type="checkbox" class="dailyCheck">
+</div>
+
+
+<div class="row">
+<span>💧 Water Target Hit</span>
+<input type="checkbox" class="dailyCheck">
+</div>
+
+
+<div class="row">
+<span>💊 Creatine Taken</span>
+<input type="checkbox" class="dailyCheck">
+</div>
+
+
+<div class="row">
+<span>🥗 Vegetables + Fruit</span>
+<input type="checkbox" class="dailyCheck">
+</div>
+
+
+<div class="row">
+<span>😴 7+ Hours Sleep</span>
+<input type="checkbox" class="dailyCheck">
+</div>
+
+
+<button onclick="completeDay()">
+🏆 COMPLETE TODAY'S GOALS
+</button>
+
+<div id="victoryMessage" class="status"></div>
+
+</div>
+
+
+<!-- WEIGHT -->
+
+<div class="card">
+
+<h2>⚖️ Weight Log</h2>
+
+<input
+type="number"
+id="weight"
+class="weight-input"
+placeholder="Today's weight (kg)"
+step="0.1"
+>
+
+</div>
+
+
+<!-- 24 HOUR STATUS -->
+
+<div class="card">
+
+<h2>⏱️ 24-Hour Data Session</h2>
+
+<div class="status">
+
+Data saved automatically.
+
+<br><br>
+
+Session started:
+<strong id="sessionStart"></strong>
+
+<br><br>
+
+Session expires:
+<strong id="sessionExpiry"></strong>
+
+<br><br>
+
+Time remaining:
+<strong id="timeRemaining"></strong>
+
+</div>
+
+</div>
+
+
+<div class="footer">
+FITNESS 07 TRACKER<br>
+Stay consistent. Discipline creates transformation.
+</div>
+
+</div>
+
+
+<script>
+
+/*
+==================================================
+FITNESS 07 TRACKER
+==================================================
+
+Nutrition values are approximate standard values.
+
+IMPORTANT:
+- Oats = YOUR oats: 17g protein / 100g
+- MuscleBlaze whey = YOUR stated 24g protein / scoop
+- Rice = cooked weight
+- Chicken = cooked weight
+- Fish = cooked weight
+- Soya = dry weight
+
+Replace values with your exact product labels
+if you want even more precise tracking.
+==================================================
+*/
+
+
+const TARGET = {
+
+calories: 1900,
+protein: 145,
+carbs: 210,
+fat: 55,
+water: 3700
+
+};
+
+
+/*
+Nutrition database
+
+calories = kcal per 100g
+protein = grams per 100g
+carbs = grams per 100g
+fat = grams per 100g
+*/
+
+const foods = {
+
+oats: {
+calories: 380,
+protein: 17,
+carbs: 64,
+fat: 7
+},
+
+rice: {
+calories: 130,
+protein: 2.7,
+carbs: 28,
+fat: 0.3
+},
+
+chicken: {
+calories: 165,
+protein: 31,
+carbs: 0,
+fat: 3.6
+},
+
+fish: {
+calories: 170,
+protein: 25,
+carbs: 0,
+fat: 7
+},
+
+soya: {
+calories: 345,
+protein: 52,
+carbs: 33,
+fat: 1
+},
+
+peanuts: {
+calories: 567,
+protein: 26,
+carbs: 16,
+fat: 49
+},
+
+milk: {
+calories: 61,
+protein: 3.4,
+carbs: 4.8,
+fat: 3.3
+},
+
+curd: {
+calories: 61,
+protein: 3.5,
+carbs: 4.7,
+fat: 3.3
+},
+
+papaya: {
+calories: 43,
+protein: 0.5,
+carbs: 11,
+fat: 0.3
+},
+
+carrot: {
+calories: 41,
+protein: 0.9,
+carbs: 9.6,
+fat: 0.2
+},
+
+beans: {
+calories: 31,
+protein: 1.8,
+carbs: 7,
+fat: 0.2
+},
+
+banana: {
+calories: 105,
+protein: 1.3,
+carbs: 27,
+fat: 0.4
+},
+
+egg: {
+calories: 72,
+protein: 6.3,
+carbs: 0.4,
+fat: 4.8
+},
+
+whey: {
+calories: 120,
+protein: 24,
+carbs: 3,
+fat: 2
+}
+
+};
+
+
+/*
+==================================================
+24 HOUR STORAGE
+==================================================
+*/
+
+const STORAGE_KEY = "fitness07Tracker";
+
+let data = {
+
+createdAt: Date.now(),
+water: 0,
+wins: 0,
+weight: "",
+macros: {
+calories: 0,
+protein: 0,
+carbs: 0,
+fat: 0
+},
+foods: {},
+checks: []
+
+};
+
+
+/*
+Check whether stored session is still inside
+the exact 24-hour period.
+*/
+
+function loadData() {
+
+const saved = localStorage.getItem(STORAGE_KEY);
+
+if (!saved) {
+
+saveData();
+
+return;
+
+}
+
+try {
+
+const parsed = JSON.parse(saved);
+
+const age = Date.now() - parsed.createdAt;
+
+if (age >= 24 * 60 * 60 * 1000) {
+
+/*
+Exactly 24 hours completed.
+Start a new session.
+*/
+
+localStorage.removeItem(STORAGE_KEY);
+
+data = {
+
+createdAt: Date.now(),
+water: 0,
+wins: 0,
+weight: "",
+macros: {
+calories: 0,
+protein: 0,
+carbs: 0,
+fat: 0
+},
+foods: {},
+checks: []
+
+};
+
+saveData();
+
+} else {
+
+data = parsed;
+
+}
+
+} catch {
+
+saveData();
+
+}
+
+}
+
+
+/*
+Save everything.
+*/
+
+function saveData() {
+
+localStorage.setItem(
+STORAGE_KEY,
+JSON.stringify(data)
+);
+
+}
+
+
+/*
+==================================================
+FOOD CALCULATION
+==================================================
+*/
+
+function getNumber(id) {
+
+const element = document.getElementById(id);
+
+return parseFloat(element.value) || 0;
+
+}
+
+
+function addFoodMacros(food, grams, totals) {
+
+totals.calories +=
+(food.calories / 100) * grams;
+
+totals.protein +=
+(food.protein / 100) * grams;
+
+totals.carbs +=
+(food.carbs / 100) * grams;
+
+totals.fat +=
+(food.fat / 100) * grams;
+
+}
+
+
+/*
+Calculate everything from the inputs.
+*/
+
+function calculateMacros() {
+
+let totals = {
+
+calories: 0,
+protein: 0,
+carbs: 0,
+fat: 0
+
+};
+
+
+/* Eggs */
+
+const eggs = getNumber("eggs");
+
+totals.calories += eggs * foods.egg.calories;
+totals.protein += eggs * foods.egg.protein;
+totals.carbs += eggs * foods.egg.carbs;
+totals.fat += eggs * foods.egg.fat;
+
+
+/* Milk */
+
+const milk = getNumber("milk");
+
+addFoodMacros(
+foods.milk,
+milk,
+totals
+);
+
+
+/* Oats */
+
+addFoodMacros(
+foods.oats,
+getNumber("oats"),
+totals
+);
+
+
+/* Chicken */
+
+addFoodMacros(
+foods.chicken,
+getNumber("chicken"),
+totals
+);
+
+
+/* Rice */
+
+addFoodMacros(
+foods.rice,
+getNumber("rice"),
+totals
+);
+
+
+/* Fish */
+
+addFoodMacros(
+foods.fish,
+getNumber("fish"),
+totals
+);
+
+
+/* Soya */
+
+addFoodMacros(
+foods.soya,
+getNumber("soya"),
+totals
+);
+
+
+/* Peanuts */
+
+addFoodMacros(
+foods.peanuts,
+getNumber("peanuts"),
+totals
+);
+
+
+/* Curd */
+
+addFoodMacros(
+foods.curd,
+getNumber("curd"),
+totals
+);
+
+
+/* Papaya */
+
+addFoodMacros(
+foods.papaya,
+getNumber("papaya"),
+totals
+);
+
+
+/* Carrot */
+
+addFoodMacros(
+foods.carrot,
+getNumber("carrot"),
+totals
+);
+
+
+/* Beans */
+
+addFoodMacros(
+foods.beans,
+getNumber("beans"),
+totals
+);
+
+
+/* Banana */
+
+const banana = getNumber("banana");
+
+totals.calories += banana * foods.banana.calories;
+totals.protein += banana * foods.banana.protein;
+totals.carbs += banana * foods.banana.carbs;
+totals.fat += banana * foods.banana.fat;
+
+
+/* Whey */
+
+const whey = getNumber("whey");
+
+totals.calories += whey * foods.whey.calories;
+totals.protein += whey * foods.whey.protein;
+totals.carbs += whey * foods.whey.carbs;
+totals.fat += whey * foods.whey.fat;
+
+
+/*
+Save calculated result.
+*/
+
+data.macros = totals;
+
+data.foods = {
+
+eggs,
+milk,
+oats: getNumber("oats"),
+chicken: getNumber("chicken"),
+rice: getNumber("rice"),
+fish: getNumber("fish"),
+soya: getNumber("soya"),
+peanuts: getNumber("peanuts"),
+curd: getNumber("curd"),
+papaya: getNumber("papaya"),
+carrot: getNumber("carrot"),
+beans: getNumber("beans"),
+banana,
+whey
+
+};
+
+saveData();
+
+displayMacros();
+
+}
+
+
+/*
+==================================================
+DISPLAY MACROS
+==================================================
+*/
+
+function displayMacros() {
+
+const m = data.macros;
+
+document.getElementById("calorieResult")
+.innerText = Math.round(m.calories);
+
+document.getElementById("proteinResult")
+.innerText = m.protein.toFixed(1) + "g";
+
+document.getElementById("carbResult")
+.innerText = m.carbs.toFixed(1) + "g";
+
+document.getElementById("fatResult")
+.innerText = m.fat.toFixed(1) + "g";
+
+
+const proteinRemaining =
+Math.max(0, TARGET.protein - m.protein);
+
+const calorieRemaining =
+Math.max(0, TARGET.calories - m.calories);
+
+
+document.getElementById("proteinRemaining")
+.innerText =
+proteinRemaining.toFixed(1) + " g";
+
+
+document.getElementById("calorieRemaining")
+.innerText =
+Math.round(calorieRemaining) + " kcal";
+
+}
+
+
+/*
+==================================================
+WATER TRACKER
+==================================================
+*/
+
+function addWater(amount) {
+
+data.water += amount;
+
+if (data.water > TARGET.water) {
+
+data.water = TARGET.water;
+
+}
+
+saveData();
+
+displayWater();
+
+}
+
+
+function resetWater() {
+
+data.water = 0;
+
+saveData();
+
+displayWater();
+
+}
+
+
+function displayWater() {
+
+document.getElementById("waterText")
+.innerText = data.water;
+
+const percentage =
+(data.water / TARGET.water) * 100;
+
+document.getElementById("progressBar")
+.style.width = percentage + "%";
+
+}
+
+
+/*
+==================================================
+CHECKBOXES
+==================================================
+*/
+
+function saveChecks() {
+
+const checks =
+document.querySelectorAll(".dailyCheck");
+
+data.checks =
+Array.from(checks).map(
+checkbox => checkbox.checked
+);
+
+saveData();
+
+}
+
+
+function loadChecks() {
+
+const checks =
+document.querySelectorAll(".dailyCheck");
+
+checks.forEach((checkbox,index) => {
+
+checkbox.checked =
+data.checks[index] || false;
+
+checkbox.addEventListener(
+"change",
+saveChecks
+);
+
+});
+
+}
+
+
+/*
+==================================================
+WEIGHT
+==================================================
+*/
+
+function setupWeight() {
+
+const weight =
+document.getElementById("weight");
+
+weight.value = data.weight || "";
+
+weight.addEventListener(
+"input",
+function() {
+
+data.weight = this.value;
+
+saveData();
+
+});
+
+}
+
+
+/*
+==================================================
+COMPLETE DAY
+==================================================
+*/
+
+function completeDay() {
+
+const checks =
+document.querySelectorAll(".dailyCheck");
+
+const allChecked =
+Array.from(checks)
+.every(check => check.checked);
+
+const proteinDone =
+data.macros.protein >= TARGET.protein;
+
+const waterDone =
+data.water >= TARGET.water;
+
+
+if (
+allChecked &&
+proteinDone &&
+waterDone
+) {
+
+data.wins += 1;
+
+saveData();
+
+document.getElementById("victoryMessage")
+.innerHTML =
+'<span class="success">🔥 TODAY IS A WIN!</span><br><br>' +
+'Discipline is building your future physique.';
+
+} else {
+
+let missing = [];
+
+if (!allChecked)
+missing.push("complete checklist");
+
+if (!proteinDone)
+missing.push("hit protein target");
+
+if (!waterDone)
+missing.push("complete water target");
+
+
+document.getElementById("victoryMessage")
+.innerHTML =
+'<span class="danger">❌ Not completed yet.</span><br><br>' +
+missing.join(" • ");
+
+}
+
+}
+
+
+/*
+==================================================
+24 HOUR TIMER
+==================================================
+*/
+
+function updateTimer() {
+
+const now = Date.now();
+
+const expiry =
+data.createdAt +
+24 * 60 * 60 * 1000;
+
+let remaining =
+expiry - now;
+
+
+if (remaining <= 0) {
+
+localStorage.removeItem(STORAGE_KEY);
+
+location.reload();
+
+return;
+
+}
+
+
+const hours =
+Math.floor(
+remaining / (1000 * 60 * 60)
+);
+
+remaining %=
+1000 * 60 * 60;
+
+
+const minutes =
+Math.floor(
+remaining / (1000 * 60)
+);
+
+remaining %=
+1000 * 60;
+
+
+const seconds =
+Math.floor(
+remaining / 1000
+);
+
+
+document.getElementById("timeRemaining")
+.innerText =
+String(hours).padStart(2,"0") +
+":" +
+String(minutes).padStart(2,"0") +
+":" +
+String(seconds).padStart(2,"0");
+
+
+document.getElementById("sessionStart")
+.innerText =
+new Date(data.createdAt)
+.toLocaleString();
+
+
+document.getElementById("sessionExpiry")
+.innerText =
+new Date(expiry)
+.toLocaleString();
+
+}
+
+
+/*
+==================================================
+LOAD EVERYTHING
+==================================================
+*/
+
+function loadFoodInputs() {
+
+const f = data.foods || {};
+
+Object.keys(f).forEach(id => {
+
+const element =
+document.getElementById(id);
+
+if (element) {
+
+element.value = f[id];
+
+}
+
+});
+
+}
+
+
+window.onload = function() {
+
+loadData();
+
+loadFoodInputs();
+
+displayMacros();
+
+displayWater();
+
+loadChecks();
+
+setupWeight();
+
+updateTimer();
+
+setInterval(
+updateTimer,
+1000
+);
+
+};
+
+
+/*
+Save automatically whenever the user
+changes a food input.
+*/
+
+document.addEventListener(
+"input",
+function(event) {
+
+if (
+event.target.matches(
+'input[type="number"]'
+)
+) {
+
+calculateMacros();
+
+}
+
+}
+);
+
+</script>
+
+</body>
+</html>
